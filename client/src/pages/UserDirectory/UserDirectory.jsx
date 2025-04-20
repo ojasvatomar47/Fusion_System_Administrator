@@ -24,7 +24,6 @@ const InfoCard = React.memo(({ person }) => (
         onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#fdfdfd")}
     >
         <Text fw={600} size="lg" mb="xs">{person.full_name}</Text>
-        <Text size="sm" c="dimmed"><strong>ID:</strong> {person.id}</Text>
         <Text size="sm" c="dimmed"><strong>Username:</strong> {person.username}</Text>
 
         {person.user_type === "student" && (
@@ -200,7 +199,7 @@ const UserDirectory = () => {
                     keepMounted={false}
                 >
                     <Tabs.List grow mb="lg">
-                        <Tabs.Tab value="student">STUDNETS</Tabs.Tab>
+                        <Tabs.Tab value="student">STUDENTS</Tabs.Tab>
                         <Tabs.Tab value="faculty">FACULTY</Tabs.Tab>
                         <Tabs.Tab value="staff">STAFF</Tabs.Tab>
                     </Tabs.List>
