@@ -671,6 +671,8 @@ class UserListView(APIView):
             programme = request.GET.get("programme")
             batch = request.GET.get("batch")
             discipline = request.GET.get("discipline")
+            category = request.GET.get("category")
+            gender = request.GET.get("gender")
 
             if programme:
                 students = students.filter(programme__iexact=programme)
@@ -678,20 +680,35 @@ class UserListView(APIView):
                 students = students.filter(batch=batch)
             if discipline:
                 students = students.filter(batch_id__discipline__name__iexact=discipline)
+            if category:
+                students = students.filter(category__iexact=category)
+            if gender:
+                students = students.filter(id__sex__iexact=gender)
 
             serializer = ViewStudentsWithFiltersSerializer(students, many=True)
 
         elif user_type == "faculty":
             faculty = GlobalsFaculty.objects.select_related('id__user', 'id__department').prefetch_related('id__user__holds_designations__designation')
             designation = request.GET.get("designation")
+            gender = request.GET.get("gender")
 
             if designation:
                 faculty = faculty.filter(id__user__holds_designations__designation__name__iexact=designation).distinct()
+            if gender:
+                faculty = faculty.filter(id__sex__iexact=gender)
 
             serializer = ViewFacultyWithFiltersSerializer(faculty, many=True)
 
         elif user_type == "staff":
-            staff = Staff.objects.select_related("id__user", "id__department")
+            staff = Staff.objects.select_related("id__user", "id__department").prefetch_related('id__user__holds_designations__designation')
+            designation = request.GET.get("designation")
+            gender = request.GET.get("gender")
+
+            if designation:
+                staff = staff.filter(id__user__holds_designations__designation__name__iexact=designation).distinct()
+            if gender:
+                staff = staff.filter(id__sex__iexact=gender)
+
             serializer = ViewStaffWithFiltersSerializer(staff, many=True)
 
         else:
