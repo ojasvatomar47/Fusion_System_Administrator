@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useMediaQuery } from "@mantine/hooks";
-import { FaUserAlt, FaClone, FaSignOutAlt, FaUserGraduate, FaChalkboardTeacher, FaUsersCog, FaKey, FaUserShield, FaTasks, FaEdit, FaArchive as FaArchiveIcon } from "react-icons/fa";
+import { FaUserAlt, FaClone, FaBook, FaSignOutAlt, FaUserGraduate, FaChalkboardTeacher, FaUsersCog, FaKey, FaUserShield, FaTasks, FaEdit, FaArchive as FaArchiveIcon } from "react-icons/fa";
 import { Tooltip, Flex, Modal, Button } from "@mantine/core";
 import { useAuth } from '../../context/AuthContext';
 
@@ -30,6 +30,13 @@ const Sidebar = () => {
       height: "10%",
       isLogout: true,
       action: () => setLogoutConfirm(true),
+    },
+    {
+      label: "User Directory",
+      icon: <FaBook size={24} />,
+      height: "10%",
+      isPrimary: true,
+      action: () => navigate("/UserDirectory"),
     },
     {
       label: "User Management",
@@ -78,7 +85,7 @@ const Sidebar = () => {
           boxShadow: "-3px 0 10px rgba(0, 0, 0, 0.1)",
         }}
       >
-        {menuItems.map(({ label, icon, path, menuKey, subItems, height, isDashboard, isLogout, action }) => (
+        {menuItems.map(({ label, icon, path, menuKey, subItems, isPrimary, height, isDashboard, isLogout, action }) => (
           <div
             key={label}
             style={{
@@ -88,20 +95,24 @@ const Sidebar = () => {
               alignItems: "center",
               justifyContent: "center",
               position: "relative",
-              backgroundColor: isDashboard
-                ? hovered === label
-                  ? MANTINE_DARK_BLUE
-                  : MANTINE_BLUE
-                : isLogout
+              backgroundColor:
+                isDashboard || isPrimary
                   ? hovered === label
-                    ? LOGOUT_DARK_RED
-                    : LOGOUT_RED
-                  : hovered === menuKey || hovered === label
-                    ? MANTINE_BLUE
-                    : "transparent",
+                    ? MANTINE_DARK_BLUE
+                    : MANTINE_BLUE
+                  : isLogout
+                    ? hovered === label
+                      ? LOGOUT_DARK_RED
+                      : LOGOUT_RED
+                    : hovered === menuKey || hovered === label
+                      ? MANTINE_BLUE
+                      : "transparent",
               transition: "background 0.3s ease-in-out",
               cursor: "pointer",
-              color: isDashboard || hovered === menuKey || hovered === label || isLogout ? "white" : MANTINE_BLUE,
+              color:
+                isDashboard || hovered === menuKey || hovered === label || isLogout || isPrimary
+                  ? "white"
+                  : MANTINE_BLUE,
             }}
             onMouseEnter={() => setHovered(menuKey || label)}
             onMouseLeave={() => setHovered(null)}

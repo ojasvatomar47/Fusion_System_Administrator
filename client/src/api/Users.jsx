@@ -84,3 +84,13 @@ export const downloadSampleCSV = async () => {
       throw error;
     }
 };
+
+export const fetchUsersByType = async (type) => {
+    try {
+        const response = await axios.get(`${API_URL}/users?type=${type}`);
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching users:', error.response?.data || error.message);
+        throw error;
+    }
+};
