@@ -10,7 +10,7 @@ from rest_framework.decorators import api_view
 from rest_framework import status
 from rest_framework.views import APIView
 from .models import GlobalsDesignation, GlobalsHoldsdesignation, GlobalsModuleaccess, AuthUser, Batch, Student, GlobalsDepartmentinfo, Programme, GlobalsFaculty, Staff
-from .serializers import GlobalExtraInfoSerializer, GlobalsDesignationSerializer, GlobalsModuleaccessSerializer, AuthUserSerializer, GlobalsHoldsDesignationSerializer, StudentSerializer, GlobalsFacultySerializer, GlobalsDepartmentinfoSerializer, BatchSerializer, ProgrammeSerializer, StaffSerializer
+from .serializers import GlobalExtraInfoSerializer, GlobalsDesignationSerializer, GlobalsModuleaccessSerializer, AuthUserSerializer, GlobalsHoldsDesignationSerializer, StudentSerializer, GlobalsFacultySerializer, GlobalsDepartmentinfoSerializer, BatchSerializer, ProgrammeSerializer, StaffSerializer, ViewStudentsWithFiltersSerializer, ViewStaffWithFiltersSerializer, ViewFacultyWithFiltersSerializer
 from io import StringIO
 from .helpers import create_password, send_email, mail_to_user, configure_password_mail, add_user_extra_info, add_user_designation_info, add_student_info
 from django.contrib.auth.hashers import make_password
@@ -246,7 +246,7 @@ def add_individual_student(request):
             "error": "Missing required fields.",
             "missing_fields": missing_fields
         }, status=status.HTTP_400_BAD_REQUEST)
-    user_password = create_password(request)
+    user_password = create_password(data)
     
     auth_user_data = {
         "password": make_password(user_password),
@@ -352,7 +352,7 @@ def add_individual_staff(request):
             "error": "Missing required fields.",
             "missing_fields": missing_fields
         }, status=status.HTTP_400_BAD_REQUEST)
-    user_password = create_password(request)
+    user_password = create_password(data)
     auth_user_data = {
         "password": make_password(user_password),
         "username": data['username'].lower(),
@@ -446,7 +446,7 @@ def add_individual_faculty(request):
             "error": "Missing required fields.",
             "missing_fields": missing_fields
         }, status=status.HTTP_400_BAD_REQUEST)
-    user_password = create_password(request)
+    user_password = create_password(data)
     auth_user_data = {
         "password": make_password(user_password),
         "username": data['username'].lower(),
@@ -671,6 +671,8 @@ class UserListView(APIView):
             programme = request.GET.get("programme")
             batch = request.GET.get("batch")
             discipline = request.GET.get("discipline")
+            category = request.GET.get("category")
+            gender = request.GET.get("gender")
 
             if programme:
                 students = students.filter(programme__iexact=programme)
@@ -678,21 +680,36 @@ class UserListView(APIView):
                 students = students.filter(batch=batch)
             if discipline:
                 students = students.filter(batch_id__discipline__name__iexact=discipline)
+            if category:
+                students = students.filter(category__iexact=category)
+            if gender:
+                students = students.filter(id__sex__iexact=gender)
 
-            serializer = StudentSerializer(students, many=True)
+            serializer = ViewStudentsWithFiltersSerializer(students, many=True)
 
         elif user_type == "faculty":
             faculty = GlobalsFaculty.objects.select_related('id__user', 'id__department').prefetch_related('id__user__holds_designations__designation')
             designation = request.GET.get("designation")
+            gender = request.GET.get("gender")
 
             if designation:
                 faculty = faculty.filter(id__user__holds_designations__designation__name__iexact=designation).distinct()
+            if gender:
+                faculty = faculty.filter(id__sex__iexact=gender)
 
-            serializer = GlobalsFacultySerializer(faculty, many=True)
+            serializer = ViewFacultyWithFiltersSerializer(faculty, many=True)
 
         elif user_type == "staff":
-            staff = Staff.objects.select_related("id__user", "id__department")
-            serializer = StaffSerializer(staff, many=True)
+            staff = Staff.objects.select_related("id__user", "id__department").prefetch_related('id__user__holds_designations__designation')
+            designation = request.GET.get("designation")
+            gender = request.GET.get("gender")
+
+            if designation:
+                staff = staff.filter(id__user__holds_designations__designation__name__iexact=designation).distinct()
+            if gender:
+                staff = staff.filter(id__sex__iexact=gender)
+
+            serializer = ViewStaffWithFiltersSerializer(staff, many=True)
 
         else:
             return Response({"error": "Invalid or missing user type."}, status=status.HTTP_400_BAD_REQUEST)
