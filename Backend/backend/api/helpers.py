@@ -12,8 +12,8 @@ from .serializers import GlobalExtraInfoSerializer, GlobalsHoldsDesignationSeria
 import os
 import threading
 
-def create_password(request):
-    user_name = request.data.get('username').lower().capitalize()
+def create_password(data):
+    user_name = data.get('username').lower().capitalize()
     special_characters = string.punctuation
     random_specials = ''.join(random.choice(special_characters) for _ in range(3))
     return f"{user_name}{random_specials}"
