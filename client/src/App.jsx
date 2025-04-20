@@ -20,6 +20,7 @@ import CreateCustomRolePage from "./pages/RoleManagementPages/CreateCustomRolePa
 import EditUserRolePage from "./pages/RoleManagementPages/EditUserRolePage.jsx";
 import ManageRoleAccessPage from "./pages/RoleManagementPages/ManageRoleAccessPage.jsx";
 
+import UserDirectory from "./pages/UserDirectory/UserDirectory.jsx";
 
 import LoginPage from "./pages/Login/LoginPage.jsx";
 import Sidebar from "./components/Sidebar/Sidebar.jsx";
@@ -31,6 +32,7 @@ function Layout() {
       <Sidebar />
       <div style={{ flex: 1, overflowY: "auto", paddingRight: "80px" }}>
         <Routes>
+          <Route path="/UserDirectory" element={<RequireAuth><UserDirectory /></RequireAuth>} />
           <Route path="/UserManagement/CreateStudent" element={<RequireAuth><StudentCreationPage /></RequireAuth>} />
           <Route path="/UserManagement/CreateFaculty" element={<RequireAuth><FacultyCreationPage /></RequireAuth>} />
           <Route path="/UserManagement/CreateStaff" element={<RequireAuth><StaffCreationPage /></RequireAuth>} />
