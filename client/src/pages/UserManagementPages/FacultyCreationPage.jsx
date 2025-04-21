@@ -103,10 +103,17 @@ const FacultyCreationPage = () => {
     }
 
     const handleSubmit = async () => {
-        console.log(formValues)
-        try{
-            setLoading(true)
-            const response = await createFaculty(formValues);
+        try {
+            setLoading(true);
+
+            // ✅ CHANGE MADE: Format dob to "YYYY-MM-DD" string before sending to API
+            const formattedFormValues = {
+                ...formValues,
+                dob: formValues.dob ? formValues.dob.toISOString().split('T')[0] : null,
+            };
+
+            const response = await createFaculty(formattedFormValues);
+
             showNotification({
                 icon: checkIcon,
                 title: "Success",
