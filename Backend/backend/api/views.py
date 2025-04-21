@@ -147,6 +147,7 @@ def add_designation(request):
             'placement_cell' : False,
             'visitor_hostel' : False,
             'phc' : False,
+            'inventory_management': False,
         }
         module_serializer = GlobalsModuleaccessSerializer(data=data)
         if module_serializer.is_valid():
