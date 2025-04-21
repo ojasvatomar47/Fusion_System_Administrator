@@ -33,6 +33,15 @@ const InfoCard = React.memo(({ person }) => (
                 <Text size="sm"><strong>Discipline:</strong> {person.discipline}</Text>
                 <Text size="sm"><strong>Batch:</strong> {person.batch}</Text>
                 <Text size="sm"><strong>Semester:</strong> {person.curr_semester_no}</Text>
+                <Text size="sm"><strong>Category:</strong> {person.category}</Text>
+                <Text size="sm"><strong>Gender:</strong> {person.gender}</Text>
+            </>
+        )}
+
+        {person.user_type === "staff" && (
+            <>
+                <Divider my="sm" />
+                <Text size="sm"><strong>Gender:</strong> {person.gender}</Text>
             </>
         )}
 
@@ -40,6 +49,7 @@ const InfoCard = React.memo(({ person }) => (
             <>
                 <Divider my="sm" />
                 <Text size="sm"><strong>Department:</strong> {person.department}</Text>
+                <Text size="sm"><strong>Gender:</strong> {person.gender}</Text>
                 <Text size="sm" mb="xs"><strong>Designations:</strong></Text>
                 {person.designations.map((role, idx) => (
                     <Badge key={idx} color="indigo" variant="light" radius="md" mr={5}>
@@ -77,16 +87,16 @@ const UserDirectory = () => {
     const [activeTab, setActiveTab] = useState("student");
     const [searchQuery, setSearchQuery] = useState("");
     const [filters, setFilters] = useState({
-        programme: [], discipline: [], batch: [],
-        department: [], semester: [], designations: [],
+        programme: [], discipline: [], batch: [], category: [],
+        department: [], semester: [], designations: [], gender: []
     });
     const [data, setData] = useState({ student: [], faculty: [], staff: [] });
     const [loading, setLoading] = useState(false);
     const [filtering, setFiltering] = useState(false);
 
     const resetFilters = () => setFilters({
-        programme: [], discipline: [], batch: [],
-        department: [], semester: [], designations: [],
+        programme: [], discipline: [], batch: [], category: [],
+        department: [], semester: [], designations: [], gender: []
     });
 
     useEffect(() => {
@@ -110,9 +120,9 @@ const UserDirectory = () => {
     const currentData = data[activeTab] || [];
 
     const applicableFilters =
-        activeTab === "student" ? ["programme", "discipline", "batch", "semester"]
-            : activeTab === "faculty" ? ["department", "designations"]
-                : [];
+        activeTab === "student" ? ["programme", "discipline", "batch", "semester", "category", "gender"]
+            : activeTab === "faculty" ? ["department", "designations", "gender"]
+                : ["gender"];
 
     const handleSearchChange = useMemo(() =>
         debounce((value) => {
@@ -132,9 +142,9 @@ const UserDirectory = () => {
 
     const getItemSize = (index) => {
         const user = filteredData[index];
-        if (user.user_type === "student") return 250;
-        if (user.user_type === "faculty") return 230;
-        return 140;
+        if (user.user_type === "student") return 270;
+        if (user.user_type === "faculty") return 250;
+        return 150;
     };
 
     const VirtualList = () => (
@@ -168,22 +178,9 @@ const UserDirectory = () => {
                     size="xl"
                     radius="xs"
                     gradient={{ from: 'blue', to: 'cyan', deg: 90 }}
-                    sx={{
-                        display: 'block',
-                        width: { base: '100%', sm: 'auto' },
-                        whiteSpace: 'normal',
-                        padding: '1rem',
-                        textAlign: 'center',
-                    }}
+                    sx={{ display: 'block', width: { base: '100%', sm: 'auto' }, whiteSpace: 'normal', padding: '1rem', textAlign: 'center' }}
                 >
-                    <Title
-                        order={1}
-                        sx={{
-                            fontSize: { base: 'lg', sm: 'xl' },
-                            lineHeight: 1.2,
-                            wordBreak: 'break-word',
-                        }}
-                    >
+                    <Title order={1} sx={{ fontSize: { base: 'lg', sm: 'xl' }, lineHeight: 1.2, wordBreak: 'break-word' }}>
                         User Directory
                     </Title>
                 </Button>
