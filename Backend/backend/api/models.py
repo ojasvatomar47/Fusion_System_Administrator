@@ -166,6 +166,7 @@ class GlobalsModuleaccess(models.Model):
     placement_cell = models.BooleanField()
     visitor_hostel = models.BooleanField()
     phc = models.BooleanField()
+    inventory_management = models.BooleanField()
 
     class Meta:
         managed = False
