@@ -17,6 +17,11 @@ def update_globals_db(request):
             """)
 
             cursor.execute("""
+                ALTER TABLE globals_designation
+                ADD COLUMN IF NOT EXISTS dept_if_not_basic_designation VARCHAR(100) NULL;
+            """)
+
+            cursor.execute("""
                 DROP SEQUENCE IF EXISTS auth_user_id_seq CASCADE;
             """)
                 
