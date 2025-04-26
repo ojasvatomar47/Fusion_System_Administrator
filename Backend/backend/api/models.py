@@ -97,7 +97,7 @@ class GlobalsDesignation(models.Model):
     type = models.CharField(max_length=30)
     basic = models.BooleanField(default=False, null=False, blank=False)
     category = models.CharField(max_length=20, null=True, blank=True)
-
+    dept_if_not_basic = models.ForeignKey(GlobalsDepartmentinfo, on_delete=models.CASCADE, blank=True, null=True)    
     class Meta:
         managed = False
         db_table = 'globals_designation'
