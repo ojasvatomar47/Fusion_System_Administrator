@@ -6,9 +6,8 @@ import "@mantine/core/styles.css";
 import { AuthProvider } from "./context/AuthContext.jsx";
 import RequireAuth from "./components/RequireAuth/RequireAuth.jsx";
 
-import ArchiveUsersPage from "./pages/ArchivingPages/ArchiveUsersPage.jsx";
-import ArchiveNotificationsPage from "./pages/ArchivingPages/ArchiveNotificationsPage.jsx";
-import ArchiveAnnouncementsPage from "./pages/ArchivingPages/ArchiveAnnouncementsPage.jsx";
+import ArchiveStudentsPage from "./pages/ArchivingPages/ArchiveStudentsPage.jsx";
+import ArchiveFacultyPage from "./pages/ArchivingPages/ArchiveFacultyPage.jsx";
 
 import DeleteUserPage from "./pages/UserManagementPages/DeleteUserPage.jsx";
 import ResetUserPasswordPage from "./pages/UserManagementPages/ResetUserPasswordPage.jsx";
@@ -41,9 +40,8 @@ function Layout() {
           <Route path="/RoleManagement/CreateCustomRole" element={<RequireAuth><CreateCustomRolePage /></RequireAuth>} />
           <Route path="/RoleManagement/EditUserRole" element={<RequireAuth><EditUserRolePage /></RequireAuth>} />
           <Route path="/RoleManagement/ManageRoleAccess" element={<RequireAuth><ManageRoleAccessPage /></RequireAuth>} />
-          <Route path="/archive/users" element={<RequireAuth><ArchiveUsersPage /></RequireAuth>} />
-          <Route path="/archive/notifications" element={<RequireAuth><ArchiveNotificationsPage /></RequireAuth>} />
-          <Route path="/archive/announcements" element={<RequireAuth><ArchiveAnnouncementsPage /></RequireAuth>} />
+          <Route path="/archive/students" element={<RequireAuth><ArchiveStudentsPage /></RequireAuth>} />
+          <Route path="/archive/faculty" element={<RequireAuth><ArchiveFacultyPage /></RequireAuth>} />
         </Routes>
       </div>
     </div>
@@ -59,10 +57,10 @@ function App() {
           <Routes>
             {/* Route to the Login page by default */}
             <Route path="/login" element={<LoginPage />} />
-            
+
             {/* The default route now redirects to /login */}
             <Route path="/" element={<Navigate to="/login" />} />
-            
+
             {/* Other protected routes */}
             <Route path="/*" element={<Layout />} />
           </Routes>

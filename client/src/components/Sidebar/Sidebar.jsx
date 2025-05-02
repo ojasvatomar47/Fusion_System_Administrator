@@ -64,8 +64,8 @@ const Sidebar = () => {
       icon: <FaArchiveIcon size={24} />,
       menuKey: "archive",
       subItems: [
-        { label: "Archive User", path: "/archive/users", icon: <FaArchiveIcon size={18} /> },
-        { label: "Archive Announcements", path: "/archive/announcements", icon: <FaArchiveIcon size={18} /> },
+        { label: "Archive Students", path: "/archive/students", icon: <FaArchiveIcon size={18} /> },
+        { label: "Archive Faculty", path: "/archive/faculty", icon: <FaArchiveIcon size={18} /> },
       ],
     },
   ];
